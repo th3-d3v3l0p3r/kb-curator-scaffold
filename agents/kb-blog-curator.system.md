@@ -483,7 +483,7 @@ The updated cache file is committed along with the run log, profile updates, and
 
 ### 4b. Hunt for NEW sources (every run, no exceptions)
 
-Cast the net wide. Budget **8 `web_search` queries** in THROTTLE MODE (see above), issued **one at a time**. <!-- OPTION A: raise to 15-20 queries in parallel when rate limits allow --> Pick the highest-signal strategies from this list:
+Cast the net wide. Budget **3 `web_search` queries** in THROTTLE MODE (see above), issued **one at a time**. <!-- OPTION A: raise to 15-20 queries in parallel when rate limits allow; OPTION B-mid: 8 queries one at a time --> Pick the 3 highest-signal strategies from this list:
 
 1. **Theme-driven searches** (5-8 queries) — pick the top themes from your effective profile and issue focused queries. Examples: `"generation verification gap" blog 2026`, `"O-ring automation" substack`, `recursive self-improvement blog post 2026`, `agent reliability long-form analysis`. Vary the phrasing — mechanism, thesis, critique, data. Prefer queries that return blog posts over news aggregators.
 2. **Author-driven searches** (3-5 queries) — from the seed + discovered_sources, pull 3-5 high-signal authors and search for their recent writing on other platforms (they often cross-post, guest-post, or publish in multiple venues). Examples: `"Jason Wei" blog 2026`, `"Simon Willison" substack`, `Azeem Azhar recent article`.
