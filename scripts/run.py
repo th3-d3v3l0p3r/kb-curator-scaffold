@@ -92,7 +92,7 @@ def kickoff_text() -> str:
         f"GIT_PUSH_PAT={KB_REPO_TOKEN}\n\n"
         "If git push returns 503, fix the remote URL to bypass the CMA proxy:\n"
         f"    git remote set-url origin https://x-access-token:{KB_REPO_TOKEN}"
-        f"@github.com/<your-username>/<your-kb-repo>.git\n"
+        f"@github.com/TH3-D3V3L0P3R/my-knowledge-base.git\n"
         "Then retry the push."
     )
 

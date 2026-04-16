@@ -3,9 +3,9 @@
 ONE-TIME SETUP for kb-blog-curator.
 
 Run this once locally. It:
-  1. Uploads the six seed files via the Files API → persists file_ids
-  2. Creates a cloud environment → persists env_id
-  3. Creates the agent with the system prompt from kb-blog-curator.system.md → persists agent_id
+  1. Uploads the six seed files via the Files API -> persists file_ids
+  2. Creates a cloud environment -> persists env_id
+  3. Creates the agent with the system prompt from kb-blog-curator.system.md -> persists agent_id
   4. Writes everything to .env so run.py (and GitHub Actions) can read them back
 
 To UPDATE the agent later (tweak the system prompt, add a tool), run this script
@@ -24,7 +24,7 @@ import os
 from pathlib import Path
 
 import anthropic
-from dotenv import dotenv_values, set_key
+from dotenv import dotenv_values, load_dotenv, set_key
 
 # --------------------------------------------------------------------------
 # Paths
@@ -32,11 +32,13 @@ from dotenv import dotenv_values, set_key
 
 PROJECT_ROOT = Path(__file__).parent.parent.resolve()
 ENV_FILE = PROJECT_ROOT / ".env"
+load_dotenv(ENV_FILE)  # loads ANTHROPIC_API_KEY into os.environ for the SDK
+
 SYSTEM_PROMPT_FILE = PROJECT_ROOT / "agents" / "kb-blog-curator.system.md"
 
 # The authoritative seed files live in the lowercase folder — topic_taxonomy.md
 # and url_sources.py only exist there, so use it as canonical.
-SEED_DIR = Path("<seed-dir>")
+SEED_DIR = Path(r"C:\Users\DEVRonikGupta\kb-setup\seed")
 
 SEED_FILES = [
     ("subscriptions.md",         "text/markdown"),   # PRIMARY — current newsletter subs, topic-tagged
@@ -76,7 +78,7 @@ def upload_seed_files(client: anthropic.Anthropic) -> dict[str, str]:
         print(f"  uploading {name} ({path.stat().st_size:,} bytes)...", flush=True)
         with path.open("rb") as f:
             uploaded = client.beta.files.upload(file=f)
-        print(f"    → {uploaded.id}")
+        print(f"    -> {uploaded.id}")
         file_ids[name] = uploaded.id
     return file_ids
 
@@ -95,8 +97,8 @@ def create_environment(client: anthropic.Anthropic) -> str:
 def create_agent(client: anthropic.Anthropic, system_prompt: str) -> tuple[str, str]:
     agent = client.beta.agents.create(
         name="kb-blog-curator",
-        description="Scheduled curator for long-form blog and Substack content. Writes structured analyses to <your-username>/<your-kb-repo>.",
-        model="claude-opus-4-6",
+        description="Scheduled curator for long-form blog and Substack content. Writes structured analyses to TH3-D3V3L0P3R/my-knowledge-base.",
+        model=os.environ.get("AGENT_MODEL", "claude-opus-4-6"),  # override with AGENT_MODEL=claude-sonnet-4-6 for testing
         system=system_prompt,
         tools=[
             {
@@ -183,7 +185,7 @@ def main() -> None:
         print("\n[2/3] Creating environment...")
         env_id = create_environment(client)
         save_env_key("ENV_ID", env_id)
-        print(f"    → {env_id}")
+        print(f"    -> {env_id}")
     else:
         print(f"\n[2/3] Environment already created: {env['ENV_ID']}")
 
@@ -193,7 +195,7 @@ def main() -> None:
         agent_id, version = create_agent(client, system_prompt)
         save_env_key("AGENT_ID", agent_id)
         save_env_key("AGENT_VERSION", version)
-        print(f"    → {agent_id} (version {version})")
+        print(f"    -> {agent_id} (version {version})")
     else:
         print(f"\n[3/3] Agent already created: {env['AGENT_ID']}")
 
